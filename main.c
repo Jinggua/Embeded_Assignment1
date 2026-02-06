@@ -73,22 +73,6 @@ int main(int argc, char *argv[]) {
   char *arg = argv[1]; // argument passed in from CLI
 
   //TODO
-
-  // Detect range "A-B"
-  // parse first integer
-  // parse second integer
-  // if first < second, then print range
-  // otherwise print error msg and exit
-  
-  // Single code
-  // Parse integer
-  // if invalid int, print error msg and exit
-  // lookup value in table
-  // print to stdout
-  return 0;
-}
-
-
 // ------------------------------------------
 // Detect range "A-B"
 char *dash = strchr(arg, '-');
@@ -175,5 +159,20 @@ if (dash != NULL) {
         return 2;
     }
     
-    fprintf(stdout, "%d %s (%s)\n", entry->code, entry->message, entry->category);
+    fprintf(stdout, "%d %s (%s)\n", entry->code, entry->name, entry->category);
 }
+  // Detect range "A-B"
+  // parse first integer
+  // parse second integer
+  // if first < second, then print range
+  // otherwise print error msg and exit
+  
+  // Single code
+  // Parse integer
+  // if invalid int, print error msg and exit
+  // lookup value in table
+  // print to stdout
+  return 0;
+}
+
+
