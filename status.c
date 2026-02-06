@@ -96,11 +96,20 @@ const StatusEntry *LookupStatus(int code) {
  */
 void PrintRange(FILE *stream, int lo, int hi) {
   // TODO: Iterate with a pointer and print entries in [lo, hi].
-  const StatusEntry* ptr = STATUSTABLE;
-  while(ptr->code <= lo && ptr->code <= hi) {
-    fprint(stdout, "%d %s (%s)\n", ptr->code, ptr->name, ptr->category);
-  }
-  ptr++;
+      const StatusEntry *begin = statustablebegin();
+    const StatusEntry *end = statustableend();
+    size_t size = statustablesize();
+    
+    // 方法1：使用指针遍历
+    const StatusEntry *ptr = begin;
+    while (ptr < end) {  // 正确！ptr < end 不是 ptr != NULL
+      if (ptr->code >= lo && ptr->code <= hi) {
+          fprintf(stream, "%d %s (%s)\n", 
+                  ptr->code, 
+                  ptr->name, 
+                  ptr->category);
+      }
+      ptr++;
 }
 
 void PrintStatus(FILE *stream, const StatusEntry *status) {
