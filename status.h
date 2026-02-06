@@ -33,6 +33,6 @@ void PrintRange(FILE *stream, int lo, int hi);
 void PrintStatus(FILE *stream, const StatusEntry *status);
 
 // Optional (stretch)
-const StatusEntry *BinaryLookupStatus();
+const StatusEntry *BinaryLookupStatus(int code);
 
 #endif // _STATUS_H_

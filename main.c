@@ -1,13 +1,14 @@
 /*
  * File: main.c
- * Author: 
- * Date: 
- * Description: 
+ * Author: Dianyao Su
+ * Date: 2026/02/05
+ * Description: This program provides a command-line interface for looking up HTTP status codes and their description. It  * supports both single code lookup and range-based quries. 
  */
 
 #include "status.h"
-#include <ctype.h>  // 需要 isspace() 函数
-#include <stdlib.h> // 需要 atoi() 函数
+#include <string.h>
+#include <ctype.h>  
+#include <stdlib.h> 
 static void Usage(const char *prog) {
   fprintf(stderr, "Usage:\n");
   fprintf(stderr, "  %s <CODE>\n", prog);
@@ -64,23 +65,23 @@ static bool ParseInt(const char *s, int *out) {
 }
 
 int main(int argc, char *argv[]) {
+  char *arg = argv[1]; // argument passed in from CLI
   // error information
   if (argc != 2) {
     Usage(argv[0]); // Calls usage with program name (first argument from CLI)
     return 1;
   }
+  // Detect range "A-B"
+  // parse first integer
+  // parse second integer
+  // if first < second, then print range
+  // otherwise print error msg and exit
+  char *dash = strchr(arg, '-');
 
-  char *arg = argv[1]; // argument passed in from CLI
-
-  //TODO
-// ------------------------------------------
-// Detect range "A-B"
-char *dash = strchr(arg, '-');
-
-if (dash != NULL) {
+  if (dash != NULL) {
     // === Handle range format "A-B" ===
     
-    // 检查只有一个'-'（拒绝"---", "200--204"等）
+    // check there is only one'-'（reject"---", "200--204"等）
     int dash_count = 0;
     for (char *p = arg; *p != '\0'; p++) {
         if (*p == '-') dash_count++;
@@ -92,35 +93,35 @@ if (dash != NULL) {
         return 2;
     }
     
-    // 分割字符串
-    size_t left_len = dash - arg;  // 左边长度
+    // split the string
+    size_t left_len = dash - arg;  // length of the left part
     
-    // 严格检查：必须是3位数！
+    // must be 3 digits
     if (left_len != 3) {
         fprintf(stderr, "Error: Invalid Input\n");
         Usage(argv[0]);
         return 2;
     }
     
-    // 复制左边部分（正好3个字符）
-    char left[4] = {0};  // 3个字符 + '\0'
+    // copy the left part
+    char left[4] = {0};  // 3 digits + '\0'
     strncpy(left, arg, 3);
     left[3] = '\0';
     
-    // 检查右边部分
+    // check the right parts
     char *right_start = dash + 1;
-    if (strlen(right_start) != 3) {  // 也必须是3位数！
+    if (strlen(right_start) != 3) {  
         fprintf(stderr, "Error: Invalid Input\n");
         Usage(argv[0]);
         return 2;
     }
     
-    // 复制右边部分
+    // copy the right part
     char right[4] = {0};
     strncpy(right, right_start, 3);
     right[3] = '\0';
     
-    // 解析数字
+    // parse number values
     int lo, hi;
     if (!ParseInt(left, &lo) || !ParseInt(right, &hi)) {
         fprintf(stderr, "Error: Invalid Input\n");
@@ -128,7 +129,7 @@ if (dash != NULL) {
         return 2;
     }
     
-    // 检查范围顺序
+    // check rang order
     if (lo <= hi) {
         PrintRange(stdout, lo, hi);
     } else {
@@ -138,9 +139,13 @@ if (dash != NULL) {
     }
     
 } else {
-    // === Handle single code ===
-    // 单个状态码也必须是3位数
-    if (strlen(arg) != 3) {
+	 // Single code
+     // Parse integer
+     // if invalid int, print error msg and exit
+     // lookup value in table
+     // print to stdout
+     // Handle single code 
+    if (strlen(arg) != 3) { // Single status code must also be 3 digits
         fprintf(stderr, "Error: Invalid Input\n");
         Usage(argv[0]);
         return 2;
@@ -153,7 +158,7 @@ if (dash != NULL) {
         return 2;
     }
     
-    const StatusEntry *entry = LookupStatus(code);
+    const StatusEntry *entry = BinaryLookupStatus(code);
     if (entry == NULL) {
         fprintf(stderr, "Error: HTTP status code %d not found\n", code);
         return 2;
@@ -161,17 +166,6 @@ if (dash != NULL) {
     
     fprintf(stdout, "%d %s (%s)\n", entry->code, entry->name, entry->category);
 }
-  // Detect range "A-B"
-  // parse first integer
-  // parse second integer
-  // if first < second, then print range
-  // otherwise print error msg and exit
-  
-  // Single code
-  // Parse integer
-  // if invalid int, print error msg and exit
-  // lookup value in table
-  // print to stdout
   return 0;
 }
 

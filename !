@@ -1,7 +1,7 @@
 /*
  * File: status.c
- * Author: Dianyao Su
- * Date: 2026/02/05
+ * Author: Yao
+ * Date: 2026/01/30
  * Description: Contains function definitions for HTTP status lookup utility
  */
 
@@ -127,23 +127,4 @@ void PrintStatus(FILE *stream, const StatusEntry *status) {
   } else {
     fprintf(stream, "Not Found status");
   }
-}
-
-
-const StatusEntry *BinaryLookupStatus(int code) {
-  const StatusEntry *low = statustablebegin();
-  const StatusEntry *high = statustableend() - 1; // Last element in the status table
-  // binary search using pointer
-  while(low <= high) {
-    // calculate middle position
-    const StatusEntry *mid = low + (high - low) / 2;
-    if(mid->code == code) {
-      return mid; // target found
-    } else if(mid->code < code) {
-      low = mid + 1; // search right half
-    } else {
-      high = mid - 1; // search left half
-    }
-  }
-  return NULL; // target not found
 }
