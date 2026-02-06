@@ -1,0 +1,113 @@
+/*
+ * File: status.c
+ * Author: Yao
+ * Date: 2026/01/30
+ * Description: Contains function definitions for HTTP status lookup utility
+ */
+
+#include "status.h"
+
+// ---- Sorted table of HTTP status codes ----
+static const StatusEntry STATUSTABLE[] = {
+    {100, "Continue", "Informational"},
+    {101, "Switching Protocols", "Informational"},
+    {102, "Processing", "Informational"},
+    {103, "Early Hints", "Informational"},
+    {200, "OK", "Success"},
+    {201, "Created", "Success"},
+    {202, "Accepted", "Success"},
+    {203, "Non-Authoritative Information", "Success"},
+    {204, "No Content", "Success"},
+    {205, "Reset Content", "Success"},
+    {206, "Partial Content", "Success"},
+    {207, "Multi-Status", "Success"},
+    {208, "Already Reported", "Success"},
+    {226, "IM Used", "Success"},
+    {300, "Multiple Choices", "Redirection"},
+    {301, "Moved Permanently", "Redirection"},
+    {302, "Found", "Redirection"},
+    {303, "See Other", "Redirection"},
+    {304, "Not Modified", "Redirection"},
+    {305, "Use Proxy (since HTTP/1.1)", "Redirection"},
+    {306, "Switch Proxy", "Redirection"},
+    {307, "Temporary Redirect", "Redirection"},
+    {308, "Permanent Redirect", "Redirection"},
+    {400, "Bad Request", "Client Error"},
+    {401, "Unauthorized", "Client Error"},
+    {402, "Payment Required", "Client Error"},
+    {403, "Forbidden", "Client Error"},
+    {404, "Not Found", "Client Error"},
+    {405, "Method Not Allowed", "Client Error"},
+    {408, "Request Timeout", "Client Error"},
+    {409, "Conflict", "Client Error"},
+    {410, "Gone", "Client Error"},
+    {413, "Payload Too Large", "Client Error"},
+    {415, "Unsupported Media Type", "Client Error"},
+    {418, "I'm a teapot", "Client Error"},
+    {429, "Too Many Requests", "Client Error"},
+    {500, "Internal Server Error", "Server Error"},
+    {501, "Not Implemented", "Server Error"},
+    {502, "Bad Gateway", "Server Error"},
+    {503, "Service Unavailable", "Server Error"},
+    {504, "Gateway Timeout", "Server Error"},
+    {511, "Network Authentication Required", "Server Error"},
+};
+
+const StatusEntry *statustablebegin(void) { return STATUSTABLE; }
+
+const StatusEntry *statustableend(void) {
+  return STATUSTABLE + (sizeof(STATUSTABLE) / sizeof(STATUSTABLE[0]));
+}
+
+size_t statustablesize(void) {
+  return (size_t)(statustableend() - statustablebegin());
+}
+
+/* name: LookupStatus
+ *
+ * Description: Finds the given HTTP status given the code number.
+ * @param code: the HTTP error code.
+ * @return: Pointer to the status object in the STATUSTABLE if found. NULL
+ * otherwise side effects: N/A
+ */
+const StatusEntry *LookupStatus(int code) {
+  // TODO: Implement search using pointers only.
+  StatusEntry* ptr= STATUSTABLE;
+  size_t size;
+  int i;
+  for(i = 0; i < size; i++) {
+    if(ptr->code == code)
+    {
+      return ptr;
+    }
+    ptr++; // move to next element
+  }
+  return NULL;
+}
+
+/* name: PrintRange
+ *
+ * Description: Prints the range of status from lo to hi (inclusive)
+ * @param stream: the file to print to (stdout, stderr, filename, etc)
+ * @param lo: the lowest status code to print
+ * @param hi: the highest status code to print
+ * @return: N/A
+ * side effects: N/A
+ */
+void PrintRange(FILE *stream, int lo, int hi) {
+  // TODO: Iterate with a pointer and print entries in [lo, hi].
+  const StatusEntry* ptr = STATUSTABLE;
+  while(ptr->code <= lo && ptr->code <= hi) {
+    fprint(stdout, "%d %s (%s)\n", ptr->code, ptr->name, ptr->category);
+  }
+  ptr++;
+}
+
+void PrintStatus(FILE *stream, const StatusEntry *status) {
+  // TODO
+  if(status != NULL) {
+    fprint(stdout, "%d %s (%s)\n", ptr->code, ptr->name, ptr->category);
+  } else {
+    fprtinf(stdout, "Not Found status");
+  }
+}
